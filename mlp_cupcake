@@ -1,0 +1,31 @@
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+
+#blank theme
+pix_theme <- theme(panel.grid = element_blank(), 
+                   panel.background = element_rect(fill = "black"),
+                   axis.text = element_blank(), 
+                   axis.ticks = element_blank(), 
+                   axis.title = element_blank(),
+                   legend.position = "none")
+#heart
+w <- 26
+h <- 19
+cupcake <- data.frame(x = rep(1:w, each = h), 
+                    y = rep(1:h, times = w), c = 0) %>%
+  mutate(c = case_when((x == 1 & y == 1) | (x %in% 10:15 & y == 2) |
+                     ((x == 9 | x == 16) & y %in% 3:5) |
+                     ((x == 8 | x == 17) & y %in% 6:7) |
+                     (x == 16 & y == 18) ~ 1,
+                   (x == 6 & y == 1) | 
+                     ( x %in% 3:5 & (y == 12 | y == 16)) |
+                     (x %in% 2:6 & y %in% 13:14) |
+                     ((x %in% 2:4 | x == 6) & y == 15 )  ~ 2,
+                   TRUE ~ 0))
+ggplot(cupcake, aes(x = x, y = y, color = factor(c))) +
+  geom_point(size = 6) + 
+  pix_theme +
+  xlim(1, w) +
+  ylim(1, h)
+
